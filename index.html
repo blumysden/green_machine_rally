@@ -2,12 +2,20 @@
 <html>
 <head>
   <title>Green Machine Rally</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/main.css">
 </head>
 <body>
   <form id="controls">
-    <button id="new-event">New Event</button>
-    <label><input type="radio" name="race-type" value="duel" checked>1-on-1</label>
-    <label><input type="radio" name="race-type" value="team">Team</label>
+    <fieldset>
+      <label><input type="radio" name="race-type" value="duel" checked>1-on-1</label>
+      <label><input type="radio" name="race-type" value="team">Team</label>
+      <button id="new-event">New Event</button>
+    </fieldset>
+    <fieldset>
+      <label>Add a racer:</label>
+      <input type="text" value="" name="new-racer-name">
+      <button id="new-racer">Add racer</button>
+    </fieldset>
   </form>
   <div id="content">
     <div id="event">
@@ -25,7 +33,7 @@
       <li><%= racer %></li>
       <% }) %>
     </ul>
-    <button>New race</button>
+    <button id="new-race">New race</button>
     <div class="races"></div>
   </div>
 </script>
@@ -46,6 +54,13 @@
       </tr>
       <% }) %>
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+        <button id="timer" class="start">START</button>
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </script>
 <script type="text/javascript" src="javascripts/main.js"></script>

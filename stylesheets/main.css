@@ -1,0 +1,48 @@
+body {
+  width: 500px;
+  margin: 20px auto;
+  font: normal 14px/18px arial, helvetica, sans-serif;
+}
+
+button {
+  padding: 10px;
+  font: normal 14px/18px arial, helvetica, sans-serif;
+  border-radius: 8px;
+  background: #666;
+  color: #fff;
+  border: none;
+}
+
+button.start {
+  background: green;
+}
+
+button.stop {
+  background: red;
+}
+
+ul {
+  overflow: hidden;
+}
+
+li {
+  float: left;
+  margin: 0 10px 10px 0;
+  padding: 0;
+  list-style: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+caption {
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+td, th {
+  border: 1px solid #999;
+}
+
