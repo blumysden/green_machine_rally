@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Green Machine Rally</title>
+</head>
+<body>
+  <form id="controls">
+    <button id="new-event">New Event</button>
+    <label><input type="radio" name="race-type" value="duel" checked>1-on-1</label>
+    <label><input type="radio" name="race-type" value="team">Team</label>
+  </form>
+  <div id="content">
+    <div id="event">
+      
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="javascripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="javascripts/underscore-min.js"></script>
+<script type="text/template" id="event-template">
+  <div class="event">
+    <h2><%= event.type %> Event</h2>
+    <ul class="upcoming-racers">
+      <% _.each(event.racers, function(racer) { %>
+      <li><%= racer %></li>
+      <% }) %>
+    </ul>
+    <button>New race</button>
+    <div class="races"></div>
+  </div>
+</script>
+<script type="text/template" id="race-template">
+  <table>
+    <caption>Race #1</caption>
+    <thead>
+      <tr>
+        <th>Racers</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= race.racers.join(', ') %></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+<script type="text/javascript" src="javascripts/main.js"></script>
+<script type="text/javascript">
+  window.Rally.setup();
+</script>
+</html>
