@@ -17,32 +17,35 @@
     this.type = type;
     this.racers = _.shuffle(boys);
     this.$el = $();
+    this.teamSize = (type == 'duel') ? 1 : Math.round(this.racers.length / 2);
   };
 
   Event.prototype = {
     addRace: function() {
-      var race = new Race(event.type);
+      var race = new Race(event.type, this.selectRacers());
       this.races.push(race);
-      race.$el = $(raceTemplate({ race: race }));
-      race.$el.appendTo('.races', this.$el);
-      this.selectRacers();
+      race.$el = $(raceTemplate({ race: race, raceNum: this.races.length }));
+      $('.races', this.$el).prepend(race.$el);
     },
     selectRacers: function() {
       var teams = [[], []],
-          teamSize = Math.round(this.racers.length / 2),
-          racers = this.racers;
-      _.each(teams, function(team) {
-        while (team.length < teamSize && racers.length) {
-          team.push(racers.splice(0,1)[0]);
+          teamSize = this.teamSize;
+      _.each(teams, function(team, i) {
+        if (!this.racers.length) {
+          var racers = _.shuffle(boys);
+          this.racers = (i == 0) ? racers : _.difference(racers, team[0]);
         }
-      });
-      console.log(teams);
+        while (team.length < teamSize && this.racers.length) {
+          team.push(this.racers.splice(0, 1)[0]);
+        }
+      }, this);
+      return teams;
     }
   }
 
-  var Race = function(type) {
+  var Race = function(type, teams) {
     this.type = type;
-    this.racers = [];
+    this.teams = teams;
     this.$el = $();
   }
 

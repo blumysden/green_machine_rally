@@ -31,7 +31,7 @@
 </script>
 <script type="text/template" id="race-template">
   <table>
-    <caption>Race #1</caption>
+    <caption>Race #<%= raceNum %></caption>
     <thead>
       <tr>
         <th>Racers</th>
@@ -39,10 +39,12 @@
       </tr>
     </thead>
     <tbody>
+      <% _.each(race.teams, function(team) { %>
       <tr>
-        <td><%= race.racers.join(', ') %></td>
+        <td><%= team.join(', ') %></td>
         <td></td>
       </tr>
+      <% }) %>
     </tbody>
   </table>
 </script>
