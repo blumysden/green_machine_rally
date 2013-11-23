@@ -12,20 +12,30 @@
       events = [],
       races = [];
 
+  var $controls = $('#controls'),
+      $type = $(':radio', $controls),
+      $eventArea = $('#event');
+
   var Event = function(type) {
     this.races = [];
     this.type = type;
     this.racers = _.shuffle(boys);
     this.$el = $();
     this.teamSize = (type == 'duel') ? 1 : Math.round(this.racers.length / 2);
+    events.push(this);
+    this.render();
   };
 
   Event.prototype = {
-    addRace: function() {
-      var race = new Race(event.type, this.selectRacers());
+    render: function() {
+      this.$el = $(eventTemplate({ event: this }));
+      $eventArea.append(this.$el);
+    },
+    addRace: function(teams, winner) {
+      var race = new Race(this.type, teams || this.selectRacers(), winner);
       this.races.push(race);
-      race.$el = $(raceTemplate({ race: race, raceNum: this.races.length }));
-      $('.races', this.$el).prepend(race.$el);
+      $('.races', this.$el).append(race.render());
+      store();
     },
     selectRacers: function() {
       var teams = [[], []],
@@ -43,41 +53,51 @@
     }
   };
 
-  var Race = function(type, teams) {
+  var Race = function(type, teams, winner) {
     this.type = type;
     this.teams = teams;
     this.$el = $();
+    this.winner = winner;
   };
 
-  var $controls = $('#controls'),
-      $type = $(':radio', $controls),
-      $eventArea = $('#event');
+  Race.prototype = {
+    render: function() {
+      var rendered = $(raceTemplate({ race: this }));
+      if (this.$el) {
+        this.$el.replaceWith(rendered);
+      }
+      this.$el = rendered;
+      this.$el.bind('click', 'button.result', _.bind(this.markWinner, this));
+      return this.$el;
+    },
+    markWinner: function(e) {
+      this.$el.find('button').removeClass('winner')
+      $(e.target).addClass('winner');
+      this.winner = $(e.target).data('team');
+      store();
+    }
+  }
 
   var eventTemplate = _.template($('#event-template').html()),
       raceTemplate = _.template($('#race-template').html());
 
-  function setup() {
-    $controls.on('click', 'button', function(e) {
-      e.preventDefault();
-      switch(e.target.id) {
-        case 'new-event':
-          addEvent();
-          break;
-        case 'new-racer':
-          addRacer();
-          break;
-      }
-    });
-    $eventArea.
-      on('click', '#new-race', addRace).
-      on('click', '#timer', toggleTimer);
-  }
+  
 
   function addEvent() {
     var e = new Event($type.filter(':checked').val());
-    events.push(e);
-    e.$el = $(eventTemplate({ event: e }));
-    $eventArea.html(e.$el);
+    store();
+    e.addRace();
+  }
+
+  function store() {
+    localStorage.boys = JSON.stringify(boys);
+    localStorage.events = JSON.stringify(_.map(events, function(event) {
+      return {
+        type: event.type,
+        races: _.map(event.races, function(race) {
+          return { type: race.type, teams: race.teams, winner: race.winner };
+        })}
+    }));
   }
 
   function addRacer() {
@@ -93,14 +113,39 @@
     events[events.length - 1].addRace();
   }
 
-  function toggleTimer(e) {
-    var $button = $(e.target),
-        start = Date.parse(new Date());
-    if ($button.hasClass('start')) {
-      $button.removeClass('start').addClass('stop').text('STOP');
-    } else if ($button.hasClass('stop')) {
-      $button.removeClass('stop').text('DONE');
+  function setup() {
+    if (localStorage.boys) {
+      console.log('restore boys', localStorage.boys);
+      boys = JSON.parse(localStorage.boys);
     }
+    if (localStorage.events) {
+      console.log(localStorage.events);
+      _.each(JSON.parse(localStorage.events), function(event) {
+        var e = new Event(event.type);
+        _.each(event.races, function(race) {
+          e.addRace(race.teams, race.winner);
+        })
+      })
+    }
+    $controls.on('click', 'button', function(e) {
+      e.preventDefault();
+      switch(e.target.id) {
+        case 'new-event':
+          addEvent();
+          break;
+        case 'new-racer':
+          addRacer();
+          break;
+        case 'reset':
+          if (confirm('Really?')) {
+            localStorage.removeItem('events');
+            localStorage.removeItem('boys');
+            location.href = location.href;
+          }
+          break;
+      }
+    });
+    $eventArea.on('click', '#new-race', addRace);
   }
 
   window.Rally = {

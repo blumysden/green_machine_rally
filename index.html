@@ -3,8 +3,14 @@
 <head>
   <title>Green Machine Rally</title>
   <link rel="stylesheet" type="text/css" href="stylesheets/main.css">
+
 </head>
 <body>
+  <div id="content">
+    <div id="event">
+      
+    </div>
+  </div>
   <form id="controls">
     <fieldset>
       <label><input type="radio" name="race-type" value="duel" checked>1-on-1</label>
@@ -16,30 +22,24 @@
       <input type="text" value="" name="new-racer-name">
       <button id="new-racer">Add racer</button>
     </fieldset>
+    <fieldset>
+      <button id="reset">RESET</button>
+    </fieldset>
   </form>
-  <div id="content">
-    <div id="event">
-      
-    </div>
-  </div>
 </body>
 <script type="text/javascript" src="javascripts/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="javascripts/underscore-min.js"></script>
 <script type="text/template" id="event-template">
   <div class="event">
     <h2><%= event.type %> Event</h2>
-    <ul class="upcoming-racers">
-      <% _.each(event.racers, function(racer) { %>
-      <li><%= racer %></li>
-      <% }) %>
-    </ul>
-    <button id="new-race">New race</button>
     <div class="races"></div>
+    <fieldset>
+      <button id="new-race">New race</button>
+    </fieldset>
   </div>
 </script>
 <script type="text/template" id="race-template">
   <table>
-    <caption>Race #<%= raceNum %></caption>
     <thead>
       <tr>
         <th>Racers</th>
@@ -47,20 +47,13 @@
       </tr>
     </thead>
     <tbody>
-      <% _.each(race.teams, function(team) { %>
+      <% _.each(race.teams, function(team, i) { %>
       <tr>
         <td><%= team.join(', ') %></td>
-        <td></td>
+        <td><button class="result<%= (race.winner == i) ? ' winner' : '' %>" data-team="<%= i %>">result</button></td>
       </tr>
       <% }) %>
     </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="2">
-        <button id="timer" class="start">START</button>
-        </td>
-      </tr>
-    </tfoot>
   </table>
 </script>
 <script type="text/javascript" src="javascripts/main.js"></script>

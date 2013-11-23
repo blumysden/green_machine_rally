@@ -1,7 +1,13 @@
 body {
-  width: 500px;
+  width: 400px;
   margin: 20px auto;
-  font: normal 14px/18px arial, helvetica, sans-serif;
+  font: normal 18px/24px arial, helvetica, sans-serif;
+}
+
+fieldset {
+  border: none;
+  border-bottom: 1px solid #666;
+  margin: 0 0 20px;
 }
 
 button {
@@ -11,9 +17,10 @@ button {
   background: #666;
   color: #fff;
   border: none;
+  margin: 0 0 10px 30px;
 }
 
-button.start {
+button.winner {
   background: green;
 }
 
@@ -35,6 +42,7 @@ li {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin: 0 0 30px;
 }
 
 caption {
@@ -44,5 +52,11 @@ caption {
 
 td, th {
   border: 1px solid #999;
+  padding: 3px 5px;
+}
+
+#new-race {
+  margin: 20px auto;
+  display: block;
 }
 
